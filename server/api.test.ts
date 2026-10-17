@@ -35,7 +35,9 @@ beforeAll(async () => {
   seedCatalog(db);
   ensureAdmin(db, adminEmail, adminPass);
   const app = createApp(db, { now: () => NOW, siteUrl: 'https://salon.test' });
-  await new Promise<void>((r) => (server = app.listen(0, '127.0.0.1', r)));
+  await new Promise<void>((resolve) => {
+    server = app.listen(0, '127.0.0.1', () => resolve());
+  });
   base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
 afterAll(() => new Promise<void>((r) => server.close(() => r())));
